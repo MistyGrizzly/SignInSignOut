@@ -22,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.signinsignout.R;
 import com.example.signinsignout.databinding.ActivitySignUpBinding;
 import com.example.signinsignout.utilities.Constants;
+import com.example.signinsignout.utilities.PreferenceManager;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.ByteArrayInputStream;
@@ -33,22 +34,18 @@ import java.util.HashMap;
 public class SignUpActivity extends AppCompatActivity {
 
     private ActivitySignUpBinding binding;
+    private PreferenceManager preferenceManager;
 
     private String encodeImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        EdgeToEdge.enable(this);
-//        setContentView(R.layout.activity_sign_up);
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-//            return insets;
-//        });
 
         binding = ActivitySignUpBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        preferenceManager = new PreferenceManager(getApplicationContext());
+
         setListeners();
     }
 
@@ -79,8 +76,6 @@ public class SignUpActivity extends AppCompatActivity {
         //check loading
         loading(true);
 
-
-
         //post to firebase
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         HashMap<String,String> user = new HashMap<>();
@@ -94,9 +89,17 @@ public class SignUpActivity extends AppCompatActivity {
                 .add(user)
                 .addOnSuccessListener(
                 documentReference -> {
-                    Toast.makeText(getApplicationContext(), "Data Inserted", Toast.LENGTH_SHORT).show();
+                    preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
+                    preferenceManager.putString(Constants.KEY_NAME, binding.inputName.getText().toString());
+                    preferenceManager.putString(Constants.KEY_IMAGE, encodeImage);
+
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+
                 }).addOnFailureListener(exception -> {
-                    Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_SHORT).show();
+                    loading(false);
+                    showToast(exception.getMessage());
         });
 
     }
@@ -135,7 +138,10 @@ public class SignUpActivity extends AppCompatActivity {
     );
 
     private Boolean isValidSignUpDetails(){
-        if(binding.inputName.getText().toString().trim().isEmpty()){
+        if(encodeImage == null) {
+            showToast("Please select a profile image");
+            return false;
+        } else if(binding.inputName.getText().toString().trim().isEmpty()){
             showToast("Please enter your name");
             return false;
         } else if (binding.inputEmail.getText().toString().trim().isEmpty()){
@@ -164,7 +170,7 @@ public class SignUpActivity extends AppCompatActivity {
             binding.progressBar.setVisibility(View.VISIBLE);
         } else {
             binding.progressBar.setVisibility(View.INVISIBLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.buttonSignUp.setVisibility(View.VISIBLE);
         }
     }
 
