@@ -2,6 +2,7 @@ package com.example.signinsignout.activites;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.signinsignout.R;
 import com.example.signinsignout.databinding.ActivitySignInBinding;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -32,8 +36,33 @@ public class SignInActivity extends AppCompatActivity {
         setListeners();
     }
 
+    /**
+     * Javadoc for later
+     */
     private void setListeners() {
         binding.textCreateNewAccount.setOnClickListener(v ->
                 startActivity(new Intent(getApplicationContext(), SignUpActivity.class)));
+
+       // binding.buttonSignIn.setOnClickListener(v -> addDataToFireStore());
     }
+
+    /**
+     * Javadoc for later
+     */
+//    private void addDataToFireStore() {
+//        FirebaseFirestore database = FirebaseFirestore.getInstance();
+//        HashMap<String,String> data = new HashMap<>();
+//
+//        data.put("first_name", "Jane");
+//        data.put("last_name", "Doe");
+//
+//        database.collection("Users").add(data).addOnSuccessListener(
+//                documentReference -> {
+//                    Toast.makeText(getApplicationContext(), "Data Inserted", Toast.LENGTH_SHORT).show();
+//                }).addOnFailureListener(exception ->{
+//                    Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_SHORT).show();
+//        });
+//
+//
+//    }
 }
