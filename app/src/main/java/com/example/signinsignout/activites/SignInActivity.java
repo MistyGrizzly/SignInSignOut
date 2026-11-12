@@ -38,7 +38,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     /**
-     * Javadoc for later
+     * Sets listeners for both the sign in button and the create account text
      */
     private void setListeners() {
         binding.textCreateNewAccount.setOnClickListener(v ->
@@ -51,10 +51,17 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Creates and shows a toast message based on the message given
+     * @param message the string message to display
+     */
     private void showToast(String message){
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * creates the firebase instance connection and attempts to log in the user
+     */
     private void SignIn() {
         loading(true);
 
@@ -81,6 +88,10 @@ public class SignInActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Checks if the edit views have valid inputs
+     * @return a boolean value that determines if the inputs are valid
+     */
     private boolean isValidSignInDetails() {
         if (binding.inputEmail.getText().toString().trim().isEmpty()){
             showToast("Please enter your email");
@@ -96,6 +107,10 @@ public class SignInActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Changes the view between the sign in button and a loading bar
+     * @param isLoading if the view is loading
+     */
     private void loading(Boolean isLoading){
         if(isLoading){
             binding.buttonSignIn.setVisibility(View.INVISIBLE);

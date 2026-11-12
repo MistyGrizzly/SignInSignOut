@@ -49,6 +49,9 @@ public class SignUpActivity extends AppCompatActivity {
         setListeners();
     }
 
+    /**
+     * Sets listeners for both the sign up button, the sign in text, and the image view
+     */
     private void setListeners() {
         binding.textSignIn.setOnClickListener(v -> onBackPressed());
 
@@ -67,11 +70,17 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
 
-
+    /**
+     * Creates and shows a toast message based on the message given
+     * @param message the string message to display
+     */
     private void showToast(String message){
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * creates the firebase instance connection and attempts to save the input information to firestore
+     */
     private void SignUp(){
         //check loading
         loading(true);
@@ -104,6 +113,11 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Takes an image and converts it into a string
+     * @param bitmap the image picked
+     * @return the image converted to a string
+     */
     private String encodeImage(Bitmap bitmap){
         int previewWidth = 150;
         int previewHeight = bitmap.getHeight()*previewWidth / bitmap.getWidth();
@@ -118,6 +132,9 @@ public class SignUpActivity extends AppCompatActivity {
         return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
 
+    /**
+     * Holds an image the user picks for their profile picture
+     */
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result ->{
@@ -137,6 +154,10 @@ public class SignUpActivity extends AppCompatActivity {
             }
     );
 
+    /**
+     * Checks if the edit views have valid inputs
+     * @return a boolean value that determines if the inputs are valid
+     */
     private Boolean isValidSignUpDetails(){
         if(encodeImage == null) {
             showToast("Please select a profile image");
@@ -164,6 +185,10 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Changes the view between the sign up button and a loading bar
+     * @param isLoading if the view is loading
+     */
     private void loading(Boolean isLoading){
         if(isLoading){
             binding.buttonSignUp.setVisibility(View.INVISIBLE);
